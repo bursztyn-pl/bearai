@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candy Eye - Fun Games for Kids!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard', cursive;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        /* Welcome Screen */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            cursor: pointer;
+        }
+
+        #welcome-screen.fade-out {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        #welcome-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: welcomePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes welcomePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* Main Content */
+        #main-content {
+            min-height: 100vh;
+            background-image: url('public/img/background.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            padding-top: 15px;
+            position: relative;
+        }
+
+        /* Logo */
+        .logo {
+            width: 650px;
+            height: auto;
+            margin-bottom: 0;
+            animation: logoPulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Title */
+        .title {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow:
+                4px 4px 0 #ff6b6b,
+                8px 8px 0 #4ecdc4,
+                12px 12px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            animation: titleBounce 1s ease-in-out infinite, rainbow 3s linear infinite;
+            letter-spacing: 5px;
+        }
+
+        @keyframes titleBounce {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin-top: -80px;
+        }
+
+        /* Game Button */
+        .game-btn {
+            background: transparent;
+            border-radius: 50%;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: visible;
+            animation: float 3s ease-in-out infinite;
+            border: none;
+        }
+
+        /* Wrapper for image to position sparkle effects */
+        .img-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sparkling circle stroke on hover */
+        .img-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 4px solid transparent;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .game-btn:hover .img-wrapper::before {
+            opacity: 1;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 0 40px rgba(255, 255, 255, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: sparkleRing 1.5s linear infinite;
+        }
+
+        @keyframes sparkleRing {
+            0% {
+                box-shadow:
+                    0 0 20px rgba(255, 100, 100, 0.8),
+                    0 0 40px rgba(255, 100, 100, 0.4),
+                    inset 0 0 20px rgba(255, 100, 100, 0.3);
+                border-color: rgba(255, 100, 100, 0.6);
+            }
+            25% {
+                box-shadow:
+                    0 0 20px rgba(100, 255, 200, 0.8),
+                    0 0 40px rgba(100, 255, 200, 0.4),
+                    inset 0 0 20px rgba(100, 255, 200, 0.3);
+                border-color: rgba(100, 255, 200, 0.6);
+            }
+            50% {
+                box-shadow:
+                    0 0 20px rgba(255, 230, 100, 0.8),
+                    0 0 40px rgba(255, 230, 100, 0.4),
+                    inset 0 0 20px rgba(255, 230, 100, 0.3);
+                border-color: rgba(255, 230, 100, 0.6);
+            }
+            75% {
+                box-shadow:
+                    0 0 20px rgba(180, 100, 255, 0.8),
+                    0 0 40px rgba(180, 100, 255, 0.4),
+                    inset 0 0 20px rgba(180, 100, 255, 0.3);
+                border-color: rgba(180, 100, 255, 0.6);
+            }
+            100% {
+                box-shadow:
+                    0 0 20px rgba(255, 100, 100, 0.8),
+                    0 0 40px rgba(255, 100, 100, 0.4),
+                    inset 0 0 20px rgba(255, 100, 100, 0.3);
+                border-color: rgba(255, 100, 100, 0.6);
+            }
+        }
+
+        /* Rotating sparkle dots around the circle */
+        .img-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 220px;
+            height: 220px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 0%, #fff 0%, transparent 8%),
+                radial-gradient(circle at 85% 15%, #fff 0%, transparent 6%),
+                radial-gradient(circle at 100% 50%, #fff 0%, transparent 8%),
+                radial-gradient(circle at 85% 85%, #fff 0%, transparent 6%),
+                radial-gradient(circle at 50% 100%, #fff 0%, transparent 8%),
+                radial-gradient(circle at 15% 85%, #fff 0%, transparent 6%),
+                radial-gradient(circle at 0% 50%, #fff 0%, transparent 8%),
+                radial-gradient(circle at 15% 15%, #fff 0%, transparent 6%);
+        }
+
+        .game-btn:hover .img-wrapper::after {
+            opacity: 1;
+            animation: rotateSparkles 2s linear infinite;
+        }
+
+        @keyframes rotateSparkles {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .game-btn:nth-child(1) { animation-delay: 0s; }
+        .game-btn:nth-child(2) { animation-delay: 0.5s; }
+        .game-btn:nth-child(3) { animation-delay: 1s; }
+        .game-btn:nth-child(4) { animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            75% { transform: translateY(-5px) rotate(-2deg); }
+        }
+
+        .game-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .game-btn:active {
+            transform: scale(0.95);
+        }
+
+        .game-btn img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            animation: wiggle 2s ease-in-out infinite;
+            filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.4));
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* Przycisk 1 - Word Play - obrót 360 + powiększenie */
+        .game-btn:nth-child(1):hover img {
+            animation: spin360 0.6s ease-in-out;
+        }
+
+        @keyframes spin360 {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.3); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* Przycisk 2 - Story Time - podskakiwanie */
+        .game-btn:nth-child(2):hover img {
+            animation: bounce 0.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-25px) scale(1.1); }
+        }
+
+        /* Przycisk 3 - My Hero - trzęsienie (jak superbohater) */
+        .game-btn:nth-child(3):hover img {
+            animation: shake 0.4s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-8px) rotate(-5deg); }
+            75% { transform: translateX(8px) rotate(5deg); }
+        }
+
+        /* Przycisk 4 - Languages - pulsowanie + obrót */
+        .game-btn:nth-child(4):hover img {
+            animation: pulse 0.6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(10deg); }
+            50% { transform: scale(1) rotate(0deg); }
+            75% { transform: scale(1.2) rotate(-10deg); }
+        }
+
+        .game-btn span {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow:
+                2px 2px 0 #000,
+                -2px -2px 0 #000,
+                2px -2px 0 #000,
+                -2px 2px 0 #000,
+                3px 3px 10px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-btn:nth-child(1) span { color: #ff9999; }
+        .game-btn:nth-child(2) span { color: #7eeaea; }
+        .game-btn:nth-child(3) span { color: #ffc04d; }
+        .game-btn:nth-child(4) span { color: #c084fc; }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, #fff 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(180deg); opacity: 0; }
+        }
+
+        /* Fireworks Canvas */
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Floating particles background */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Stars */
+        .star {
+            position: fixed;
+            color: #ffd700;
+            font-size: 2rem;
+            animation: twinkle 1s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2rem;
+            }
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .game-btn img {
+                width: 120px;
+                height: 120px;
+            }
+            .game-btn span {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <img src="public/img/welcome-screen.jpeg" alt="Welcome to Candy Eye!">
+    </div>
+
+    <!-- Fireworks Canvas -->
+    <canvas id="fireworks"></canvas>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <img src="public/img/bearai.png" alt="BearAI Logo" class="logo">
+
+        <div class="games-grid">
+            <div class="game-btn" data-game="meetme">
+                <div class="img-wrapper">
+                    <img src="public/img/blocks.png" alt="Meet Me">
+                </div>
+                <span>Meet Me</span>
+            </div>
+
+            <div class="game-btn" data-game="storytime">
+                <div class="img-wrapper">
+                    <img src="public/img/book.png" alt="Story Time">
+                </div>
+                <span>Story Time</span>
+            </div>
+
+            <div class="game-btn" data-game="myhero">
+                <div class="img-wrapper">
+                    <img src="public/img/hero.png" alt="My Hero">
+                </div>
+                <span>My Hero</span>
+            </div>
+
+            <div class="game-btn" data-game="languages">
+                <div class="img-wrapper">
+                    <img src="public/img/language.png" alt="Learn Languages">
+                </div>
+                <span>Learn Languages</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Welcome screen transition - na kliknięcie
+        document.getElementById('welcome-screen').addEventListener('click', () => {
+            document.getElementById('welcome-screen').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('welcome-screen').style.display = 'none';
+                startBackgroundEffects();
+            }, 800);
+        });
+
+        // Fireworks
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let fireworks = [];
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Firework {
+            constructor(x, y, targetY) {
+                this.x = x;
+                this.y = y;
+                this.targetY = targetY;
+                this.speed = 8;
+                this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                this.trail = [];
+            }
+
+            update() {
+                this.trail.push({ x: this.x, y: this.y });
+                if (this.trail.length > 10) this.trail.shift();
+                this.y -= this.speed;
+                return this.y <= this.targetY;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+
+                this.trail.forEach((pos, i) => {
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, 2 * (i / this.trail.length), 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = i / this.trail.length;
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+            }
+
+            explode() {
+                const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a855f7', '#ff9ff3', '#00d2d3'];
+                for (let i = 0; i < 80; i++) {
+                    const angle = (Math.PI * 2 / 80) * i;
+                    const speed = Math.random() * 5 + 2;
+                    particles.push(new Particle(
+                        this.x,
+                        this.y,
+                        Math.cos(angle) * speed,
+                        Math.sin(angle) * speed,
+                        colors[Math.floor(Math.random() * colors.length)]
+                    ));
+                }
+            }
+        }
+
+        class Particle {
+            constructor(x, y, vx, vy, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.color = color;
+                this.alpha = 1;
+                this.decay = 0.015;
+                this.gravity = 0.1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += this.gravity;
+                this.alpha -= this.decay;
+                return this.alpha > 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.alpha;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function launchFirework() {
+            const x = Math.random() * canvas.width;
+            const targetY = Math.random() * (canvas.height / 2);
+            fireworks.push(new Firework(x, canvas.height, targetY));
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            fireworks = fireworks.filter(fw => {
+                fw.draw();
+                if (fw.update()) {
+                    fw.explode();
+                    return false;
+                }
+                return true;
+            });
+
+            particles = particles.filter(p => {
+                p.draw();
+                return p.update();
+            });
+
+            requestAnimationFrame(animateFireworks);
+        }
+
+        // Sparkles on buttons
+        document.querySelectorAll('.game-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => createSparkle(btn), i * 50);
+                }
+                // Launch firework on hover
+                launchFirework();
+            });
+
+            btn.addEventListener('click', () => {
+                // Multiple fireworks on click
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(launchFirework, i * 100);
+                }
+
+                // Navigate to game page
+                const game = btn.getAttribute('data-game');
+                if (game === 'storytime') {
+                    setTimeout(() => {
+                        window.location.href = 'storytime.html';
+                    }, 500);
+                } else if (game === 'meetme') {
+                    setTimeout(() => {
+                        window.location.href = 'meetme.html';
+                    }, 500);
+                } else if (game === 'myhero') {
+                    setTimeout(() => {
+                        window.location.href = 'https://11labs-kids-voice-cl-bbxl.bolt.host/';
+                    }, 500);
+                }
+            });
+        });
+
+        function createSparkle(element) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            const rect = element.getBoundingClientRect();
+            sparkle.style.left = rect.left + Math.random() * rect.width + 'px';
+            sparkle.style.top = rect.top + Math.random() * rect.height + 'px';
+            sparkle.style.background = `radial-gradient(circle, hsl(${Math.random() * 360}, 100%, 70%) 0%, transparent 70%)`;
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+
+        // Floating particles
+        function createFloatingParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a855f7', '#ff9ff3', '#00d2d3'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.width = Math.random() * 15 + 5 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+            particle.style.animationDelay = Math.random() * -20 + 's';
+            document.body.appendChild(particle);
+        }
+
+        // Floating stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.innerHTML = '⭐';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(star);
+        }
+
+        function startBackgroundEffects() {
+            // Create floating particles
+            for (let i = 0; i < 20; i++) {
+                createFloatingParticle();
+            }
+
+            // Create stars
+            for (let i = 0; i < 15; i++) {
+                createStar();
+            }
+
+            // Start fireworks animation
+            animateFireworks();
+
+            // Random fireworks every few seconds
+            setInterval(() => {
+                if (Math.random() > 0.5) launchFirework();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
