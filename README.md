@@ -1,0 +1,1 @@
+# 🐻 BearAI - Voice Assistant MVP
